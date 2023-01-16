@@ -8,6 +8,8 @@
 
 dna = 'ATGGCCTTT'
 
+for i in range(len(dna)):
+	print(f'{i} {i % 3} {dna[i]}')
 
 """
 python3 27frame.py

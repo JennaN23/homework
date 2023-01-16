@@ -1,3 +1,5 @@
+import random
+
 # 25atseq.py
 
 # Write a program that stores random DNA sequence in a string
@@ -7,6 +9,16 @@
 # Report the length, AT fraction, and sequence
 
 # Note: set random.seed() if you want repeatable random numbers
+
+dna = ""
+at = 0
+seed = random.seed(1)
+
+for i in range(30):
+	r = random.choice('AAACCGGTTT')
+	if r == 'A' or r == 'T': at += 1
+	dna += r
+print(len(dna), at/len(dna), dna)
 
 
 """
