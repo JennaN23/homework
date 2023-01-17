@@ -40,7 +40,7 @@ for i in range(5, 16, 5):
 		else:
 			rd = r2
 			ra = r
-		if r  >= i: s += 1    #normal
+		if r  >= i: s += 1	  #normal
 		if ra >= i: a += 1	  #advantage
 		if rd >= i: d += 1	  #disadvantage
 	print(f'{i} {s/n} {a/n} {d/n}')
