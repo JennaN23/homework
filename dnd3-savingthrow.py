@@ -1,3 +1,5 @@
+import random
+
 # dnd3-savingthrow.py
 
 # One of the core mechanics of D&D is the "saving throw". When certain
@@ -20,6 +22,30 @@
 # What is the probability of success normally or with advantage/disadvantage?
 # Make a table showing the results.
 
+n = 1000
+s = 0
+a = 0
+d = 0
+
+for i in range(5, 16, 5):
+	s = 0
+	a = 0
+	d = 0
+	for j in range(n):
+		r = random.randint(1, 20)
+		r2 = random.randint(1, 20)
+		if r2 > r: 
+			ra = r2
+			rd = r
+		else:
+			rd = r2
+			ra = r
+		if r  >= i: s += 1    #normal
+		if ra >= i: a += 1	  #advantage
+		if rd >= i: d += 1	  #disadvantage
+	print(f'{i} {s/n} {a/n} {d/n}')
+	
+	
 
 """
 python3 dnd3-savingthrow.py
