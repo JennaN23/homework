@@ -43,7 +43,7 @@ for i in range(5, 16, 5):
 		if r  >= i: s += 1	  #normal
 		if ra >= i: a += 1	  #advantage
 		if rd >= i: d += 1	  #disadvantage
-	print(f'{i} {s/n} {a/n} {d/n}')
+	print(f'{i} {s/n:.3f} {a/n:.3f} {d/n:.3f}')
 	
 	
 

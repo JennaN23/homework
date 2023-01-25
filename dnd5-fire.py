@@ -1,3 +1,5 @@
+import random
+
 # dnd5-fire.py
 
 # Your party has just defeated an evil dragon and it's your time to pick loot.
@@ -6,6 +8,20 @@
 # versus all fire saving throws. Which one is better? Make a program that
 # simulates saving throw success at various DCs (1-20) for ring and cloak.
 
+n = 1000
+
+for i in range(1, 21):
+	ck = 0
+	rg = 0
+	for j in range(n):
+		r  = random.randint(1, 20)
+		r2 = random.randint(1, 20)
+		if r + 3 >= i: ck += 1
+		if r2 > r: r = r2
+		if r >= i: rg += 1
+	print(f'{i} {rg/n:.4f} {ck/n:.4f}')
+		
+	
 
 """
 python3 dnd5-fire.py

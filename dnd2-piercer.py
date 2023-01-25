@@ -1,3 +1,5 @@
+import random
+
 # dnd2-piercer.py
 
 # If you have the "Piercer" feat, you may re-roll a damage die. You must
@@ -8,6 +10,17 @@
 # What is the optimal strategy? Simulate it.
 # Make a table showing reroll threshold (use <=) and average damage.
 
+n = 1000
+
+for i in range(2, 8):
+	d = 0
+	for j in range(n):
+		r = random.randint(1, 8)
+		if r <= i: r = random.randint(1, 8)
+		d += r
+	print(i, d/n)
+	
+	
 
 """
 python3 dnd2-piercer.py
