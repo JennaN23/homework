@@ -16,7 +16,7 @@ import random
 n  = 1000
 d  = 0
 st = 0
-r  = 0
+rv  = 0
 stop = False
 
 for i in range(n):
@@ -31,14 +31,14 @@ for i in range(n):
 			st += 1
 			break
 		if r == 20:
-			r += 1
+			rv += 1
 			break
 		elif r == 1: f += 2
 		elif r < 10: f += 1
 		else: s += 1
 print(f'die: {d/n}')
 print(f'stabilize: {st/n}')
-print(f'revive: {r/n}')
+print(f'revive: {rv/n}')
 	
 	
 
