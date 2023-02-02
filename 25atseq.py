@@ -11,13 +11,13 @@ import random
 # Note: set random.seed() if you want repeatable random numbers
 
 dna = ""
-at = 0
-seed = random.seed(1)
+at  = 0
+random.seed(1)
 
 for i in range(30):
-	r = random.choice('AAACCGGTTT')
-	if r == 'A' or r == 'T': at += 1
-	dna += r
+	nt = random.choice('AAACCGGTTT')
+	if nt == 'A' or nt == 'T': at += 1
+	dna += nt
 print(len(dna), at/len(dna), dna)
 
 

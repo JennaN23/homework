@@ -3,7 +3,7 @@
 # Write a program that computes the GC% of a DNA sequence
 # Format the output for 2 decimal places
 
-dna = 'ACAGAGCCAGCAGATATACAGCAGATACTAT'
+dna   = 'ACAGAGCCAGCAGATATACAGCAGATACTAT'
 count = 0
 
 for i in dna:

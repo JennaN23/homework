@@ -8,7 +8,7 @@
 # Hint: if you get stuck for more than 10 minutes, get help
 
 aas = 'ACDEFGHIKLMNPQRSTVWY'
-c = 0
+c   = 0
 
 for i in range(len(aas)):
 	for j in range(i + 1, len(aas)):
