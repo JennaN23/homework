@@ -2,7 +2,6 @@
 
 # Write a program that prints out the position, frame, and letter of the DNA
 
-# Variation: try coding this with a single loop and nested loops
 
 # Note: use 0-based indexing for position and frame (biology uses 1-based)
 
@@ -10,6 +9,16 @@ dna = 'ATGGCCTTT'
 
 for i in range(len(dna)):
 	print(f'{i} {i % 3} {dna[i]}')
+
+"""	
+# Variation: try coding this with a single loop and nested loops
+
+for i in range(len(dna)):
+	for j in range(3):
+		if   j == 0: print(i,end=' ')
+		elif j == 1: print(i % 3,end=' ')
+		else:        print(dna[i])
+"""
 
 """
 python3 27frame.py
