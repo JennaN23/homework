@@ -12,18 +12,41 @@
 # Consider the pros/cons of this algorithm vs. nested loops
 
 seq = 'ACGACGCAGGAGGAGAGTTTCAGAGATCACGAATACATCCATATTACCCAGAGAGAG'
-w = 11
+w   = 11
 
 for i in range(len(seq) - w + 1):
 	nw = ''
 	gc = 0
-	for l in seq[i:i+w]:
-		if l == 'G' or l == 'C': gc += 1
-		nw += l
+	for nt in seq[i:i+w]:
+		if nt == 'G' or nt == 'C': gc += 1
+		nw += nt
 	print(f'{i} {nw} {gc/w:.4f}') 
-		
-		
 
+"""
+# variation
+
+win = ''
+c   = 0
+gc  = 0
+
+for nt in seq[:w]:
+	win += nt
+	if nt == 'G' or nt == 'C': gc += 1
+print(f'{c} {win} {gc/w:.4f}')
+
+c  = 1
+nw = win
+
+for i in range(w, len(seq)):
+	fst  = nw[0]
+	lst  = seq[i]
+	win += lst
+	nw   = win[c:]
+	if fst == 'G' or fst == 'C': gc -= 1
+	if lst == 'G' or lst == 'C': gc += 1
+	print(f'{c} {nw} {gc/w:.4f}')
+	c += 1
+"""
 
 """
 python3 26gcwin.py
