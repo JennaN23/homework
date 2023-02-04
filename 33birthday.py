@@ -21,33 +21,32 @@ import random
 ds  = int(sys.argv[1])
 n   = int(sys.argv[2])
 tot = 0
-sim = 10
+sim = 1000
 
 for i in range(sim):
-	p   = 1
 	bds = [random.randint(1, ds) for i in range(n)]
 	for j in range(n):
-		if bds.count([bds[j]]) > 1: break
-		p *= (ds - j)/ds    # count how many birthdays per day out of total
-	tot += (1 - p)
-	#print(bds)
+		if bds.count(bds[j]) > 1: 
+			tot += 1
+			break
 print(f'{tot/sim:.3f}')
 
-# total #/# occurrences   100/4
 
 """
-#variation w/o list
+#variation w/o list (WIP)
 
 for i in range(sim):
-	p = 1
+	#p = 1
 	dup = False
 	for i in range(n):
 		bd = random.randint(1, ds)
 		for j in range(ds):
 			if j == bd: dup = True
-		if dup: break 
-		else: p *= (ds - j)/ds
-	tot += (1 - p)
+		if dup: 
+			tot += 1
+			break 
+		#else: p *= (ds - j)/ds
+	#tot += (1 - p)
 print(f'{tot/sim:.3f}')
 """
 
