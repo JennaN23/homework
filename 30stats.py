@@ -25,7 +25,6 @@ med   = lst[int(count/2)]
 # std. dev
 for num in lst:
 	stdv += ((num - mean)**2)	
-	
 print(f'Count: {count}')
 print(f'Minimum: {min(lst):.1f}')
 print(f'Maximum: {max(lst):.1f}')
