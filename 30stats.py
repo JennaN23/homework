@@ -12,21 +12,19 @@ import sys
 count = len(sys.argv[1:])
 sum   = 0
 stdv  = 0
-mean  = 0
-med   = 0
 lst   = []
 
-for i in sys.argv[1:]:
-	lst.append(int(i))
-	sum += int(i)
+for num in sys.argv[1:]:
+	lst.append(int(num))
+	sum += int(num)
 	
 lst.sort()
 mean  = sum/count
 med   = lst[int(count/2)]
 
 # std. dev
-for i in lst:
-	stdv += ((i - mean)**2)	
+for num in lst:
+	stdv += ((num - mean)**2)	
 	
 print(f'Count: {count}')
 print(f'Minimum: {min(lst):.1f}')
