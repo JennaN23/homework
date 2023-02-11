@@ -17,8 +17,9 @@ import sys
 
 # Note: you will not get exactly the same results as the command line below
 
-
-# ask about reads being full length
+# ask about reads being full length (make sure reads fit within the sequence)
+# for pos in range(len(grn) - readlen + 1)
+# initialize with zeros
 
 gs    = int(sys.argv[1])
 rn    = int(sys.argv[2])
@@ -26,18 +27,17 @@ rl    = int(sys.argv[3])
 reads = []
 cvg   = []
 
-for i in sys.argv[1:]:
+for val in sys.argv[1:]:
 	try:
-		p = int(i)
+		p = int(val)
 	except:
-		raise ValueError(f'Cannot convert {i} to number')
+		raise ValueError(f'Cannot convert {val} to number')
+	assert(p > 0)
 		
 #generate starting coordinate, if start + rl < gs, add tuple
 
 for i in range(rn):
-	s = random.randint(-rl + 1, gs + rl)
-	#s = random.randint(1, gs)
-	#while (s + rl - 1) > gs: s = random.randint(1, gs) 
+	s = random.randint(1, gs - rl)
 	e = s + rl - 1
 	reads.append((s, e))
 reads.sort()
@@ -53,14 +53,17 @@ for p in range(1, gs + 1):
 #print(cvg)
 
 tc = 0
-p, min = cvg[0]
-p, max = cvg[0]
+p, min = cvg[rl]
+p, max = cvg[rl]
+
+# don't sample the ends
 
 for p, c in cvg:
+	if p < rl//2 or p > gs - rl//2: continue
 	tc += c
 	if c < min: min = c
 	if c > max: max = c 
-ac  = tc/gs
+ac = tc/gs
 
 print(f'{min} {max} {ac:.5f}')
 

@@ -14,9 +14,36 @@ import random
 # Variation: try making the calendar a list
 # Variation: try making the birthdays a list
 
-# w/o list
 # generate random bd
-# ask about formula vs simulation
+# simulation
+
+# initialize with zeros, mark each bd, if 0 continue, if 1 break
+
+for val in sys.argv[1:]:
+	try:
+		p = int(val)
+	except:
+		raise ValueError(f'Cannot convert {val} to int')
+	assert(p > 0)
+		
+ds  = int(sys.argv[1])
+n   = int(sys.argv[2])
+sim = 1000
+tot = 0
+
+for i in range(sim):
+	bds = [0] * ds
+	for j in range(n):
+		bd = random.randint(0, ds - 1)
+		if bds[bd] == 1:
+			tot += 1 
+			break
+		bds[bd] += 1
+print(f'{tot/sim:.3f}')
+
+
+"""
+# Variation
 
 ds  = int(sys.argv[1])
 n   = int(sys.argv[2])
@@ -29,24 +56,6 @@ for i in range(sim):
 		if bds.count(bds[j]) > 1: 
 			tot += 1
 			break
-print(f'{tot/sim:.3f}')
-
-
-"""
-#variation w/o list (WIP)
-
-for i in range(sim):
-	#p = 1
-	dup = False
-	for i in range(n):
-		bd = random.randint(1, ds)
-		for j in range(ds):
-			if j == bd: dup = True
-		if dup: 
-			tot += 1
-			break 
-		#else: p *= (ds - j)/ds
-	#tot += (1 - p)
 print(f'{tot/sim:.3f}')
 """
 

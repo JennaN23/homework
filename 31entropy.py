@@ -14,18 +14,21 @@ import sys
 # Hint: try breaking your program with erroneous input
 
 h   = 0
-lst = []
+probs = []
 
 for val in sys.argv[1:]:
-	try: 
-		lst.append(float(val))
+	try:
+		p = float(val)
+		probs.append(p)
 	except:
 		raise ValueError(f'Cannot convert {val} to float')
+	assert(p > 0)
 		
-assert(math.isclose(sum(lst), 1.0))
+assert(math.isclose(sum(probs), 1.0))
 
-for i in lst:
-	h += (i * math.log2(i))
+for val in probs:
+	assert(val > 0)
+	h += (val * math.log2(val))
 print(f'{-h:.3f}')
 
 """

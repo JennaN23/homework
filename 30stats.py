@@ -9,27 +9,33 @@ import sys
 
 # Note: you are not allowed to import any library except sys
 
-count = len(sys.argv[1:])
-sum   = 0
-stdv  = 0
-lst   = []
+c    = len(sys.argv[1:])
+sum  = 0
+stdv = 0
+lst  = []
+
+for val in sys.argv[1:]:
+	try:
+		p = float(val)
+	except:
+		raise ValueError(f'Cannot convert {val} to float')
 
 for num in sys.argv[1:]:
-	lst.append(int(num))
-	sum += int(num)
+	lst.append(float(num))
+	sum += float(num)
 	
 lst.sort()
-mean  = sum/count
-med   = lst[int(count/2)]
+mean  = sum/c
+med   = lst[int(c/2)]
 
 # std. dev
 for num in lst:
 	stdv += ((num - mean)**2)	
-print(f'Count: {count}')
+print(f'Count: {c}')
 print(f'Minimum: {min(lst):.1f}')
 print(f'Maximum: {max(lst):.1f}')
 print(f'Mean: {mean:.3f}')
-print(f'Std. dev: {(stdv/count)**0.5:.3f}')
+print(f'Std. dev: {(stdv/c)**0.5:.3f}')
 print(f'Median: {med:.3f}') 
 
 """
