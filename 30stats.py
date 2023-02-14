@@ -25,15 +25,20 @@ for num in sys.argv[1:]:
 	sum += float(num)
 	
 lst.sort()
-mean  = sum/c
-med   = lst[int(c/2)]
+mean = sum/c
+# dirty median
+#med   = int(c/2)
+# regular (clean???) median :o
+half = int(c/2)
+if c % 2 == 0: med = (lst[half - 1] + lst[half])/2
+else:                 med = lst[half]
 
 # std. dev
 for num in lst:
 	stdv += ((num - mean)**2)	
 print(f'Count: {c}')
-print(f'Minimum: {min(lst):.1f}')
-print(f'Maximum: {max(lst):.1f}')
+print(f'Minimum: {lst[0]:.1f}')
+print(f'Maximum: {lst[-1]:.1f}')
 print(f'Mean: {mean:.3f}')
 print(f'Std. dev: {(stdv/c)**0.5:.3f}')
 print(f'Median: {med:.3f}') 
