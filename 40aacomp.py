@@ -1,3 +1,6 @@
+import gzip
+import sys
+
 # 40aacomp.py
 
 # Make a program that reports the amino acid composition in a file of proteins
@@ -6,8 +9,97 @@
 
 # Hint: gzip.open(sys.argv[1], 'rt')
 
-# Variation: use 20 named variables
+
 # Variation: use a list
+
+aas = ['A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V','W', 'Y']
+tot = 0
+c= [0]*20
+
+with gzip.open(sys.argv[1], 'rt') as fp:
+	for line in fp.readlines():
+		if line[0] == '>': continue
+		for nt in line:
+			if nt in aas: 
+				tot += 1
+				c[aas.index(nt)] += 1
+
+for i in range(20):
+	print(f'{aas[i]} {c[i]} {c[i]/tot:.4f}')
+
+
+"""
+# Variation: use 20 named variables
+
+a = 0
+c = 0
+d = 0
+e = 0
+f = 0
+g = 0
+h = 0
+i = 0
+k = 0
+l = 0
+m = 0
+n = 0
+p = 0
+q = 0
+r = 0
+s = 0
+t = 0
+v = 0
+w = 0
+y = 0
+tot = 0
+
+with gzip.open(sys.argv[1], 'rt') as fp:
+	for line in fp.readlines():
+		if line[0] == '>': continue
+		for nt in line:
+			if   nt == 'A': a += 1
+			elif nt == 'C': c += 1
+			elif nt == 'D': d += 1
+			elif nt == 'E': e += 1
+			elif nt == 'F': f += 1
+			elif nt == 'G': g += 1
+			elif nt == 'H': h += 1
+			elif nt == 'I': i += 1
+			elif nt == 'K': k += 1
+			elif nt == 'L': l += 1
+			elif nt == 'M': m += 1
+			elif nt == 'N': n += 1
+			elif nt == 'P': p += 1
+			elif nt == 'Q': q += 1
+			elif nt == 'R': r += 1
+			elif nt == 'S': s += 1
+			elif nt == 'T': t += 1
+			elif nt == 'V': v += 1
+			elif nt == 'W': w += 1
+			elif nt == 'Y': y += 1
+			else: continue
+			tot += 1
+print(f'A {a} {a/tot:.4f}')
+print(f'C {c} {c/tot:.4f}')
+print(f'D {d} {d/tot:.4f}')
+print(f'E {e} {e/tot:.4f}')
+print(f'F {f} {f/tot:.4f}')
+print(f'G {g} {g/tot:.4f}')
+print(f'H {h} {h/tot:.4f}')
+print(f'I {i} {i/tot:.4f}')
+print(f'K {k} {k/tot:.4f}')
+print(f'L {l} {l/tot:.4f}')
+print(f'M {m} {m/tot:.4f}')
+print(f'N {n} {n/tot:.4f}')
+print(f'P {p} {p/tot:.4f}')
+print(f'Q {q} {q/tot:.4f}')
+print(f'R {r} {r/tot:.4f}')
+print(f'S {s} {s/tot:.4f}')
+print(f'T {t} {t/tot:.4f}')
+print(f'V {v} {v/tot:.4f}')
+print(f'W {w} {w/tot:.4f}')
+print(f'Y {y} {y/tot:.4f}')
+"""
 
 
 """
