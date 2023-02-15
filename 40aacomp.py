@@ -19,10 +19,10 @@ c= [0]*20
 with gzip.open(sys.argv[1], 'rt') as fp:
 	for line in fp.readlines():
 		if line[0] == '>': continue
-		for nt in line:
-			if nt in aas: 
+		for aa in line:
+			if aa in aas: 
 				tot += 1
-				c[aas.index(nt)] += 1
+				c[aas.index(aa)] += 1
 
 for i in range(20):
 	print(f'{aas[i]} {c[i]} {c[i]/tot:.4f}')
@@ -56,27 +56,27 @@ tot = 0
 with gzip.open(sys.argv[1], 'rt') as fp:
 	for line in fp.readlines():
 		if line[0] == '>': continue
-		for nt in line:
-			if   nt == 'A': a += 1
-			elif nt == 'C': c += 1
-			elif nt == 'D': d += 1
-			elif nt == 'E': e += 1
-			elif nt == 'F': f += 1
-			elif nt == 'G': g += 1
-			elif nt == 'H': h += 1
-			elif nt == 'I': i += 1
-			elif nt == 'K': k += 1
-			elif nt == 'L': l += 1
-			elif nt == 'M': m += 1
-			elif nt == 'N': n += 1
-			elif nt == 'P': p += 1
-			elif nt == 'Q': q += 1
-			elif nt == 'R': r += 1
-			elif nt == 'S': s += 1
-			elif nt == 'T': t += 1
-			elif nt == 'V': v += 1
-			elif nt == 'W': w += 1
-			elif nt == 'Y': y += 1
+		for aa in line:
+			if   aa == 'A': a += 1
+			elif aa == 'C': c += 1
+			elif aa == 'D': d += 1
+			elif aa == 'E': e += 1
+			elif aa == 'F': f += 1
+			elif aa == 'G': g += 1
+			elif aa == 'H': h += 1
+			elif aa == 'I': i += 1
+			elif aa == 'K': k += 1
+			elif aa == 'L': l += 1
+			elif aa == 'M': m += 1
+			elif aa == 'N': n += 1
+			elif aa == 'P': p += 1
+			elif aa == 'Q': q += 1
+			elif aa == 'R': r += 1
+			elif aa == 'S': s += 1
+			elif aa == 'T': t += 1
+			elif aa == 'V': v += 1
+			elif aa == 'W': w += 1
+			elif aa == 'Y': y += 1
 			else: continue
 			tot += 1
 print(f'A {a} {a/tot:.4f}')
