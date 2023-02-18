@@ -9,7 +9,6 @@ import sys
 
 # Hint: gzip.open(sys.argv[1], 'rt')
 
-
 # Variation: use a list
 
 aas = ['A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V','W', 'Y']
@@ -18,6 +17,7 @@ c= [0]*20
 
 with gzip.open(sys.argv[1], 'rt') as fp:
 	for line in fp.readlines():
+		line = line.rstrip()
 		if line[0] == '>': continue
 		for aa in line:
 			if aa in aas: 
