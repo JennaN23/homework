@@ -25,41 +25,31 @@ import sys
 # Hint: create a function for hydrophobic alpha-helix
 # Hint: use the same function for both signal peptide and transmembrane
 
-def kd(seq, ws, start, end):
+def kd(seq, ws, t):
 	aas = ['I', 'V', 'L', 'F', 'C', 'M', 'A', 'G', 'T', 'S', 'W', 'Y', 'P', 'H', 'E', 'Q', 'D', 'N','K', 'R']
 	hyd = [4.5, 4.2, 3.8, 2.8, 2.5, 1.9, 1.8, -0.4, -0.7, -0.8, -0.9, -1.3, -1.6, -3.2, -3.5, -3.5, -3.5, -3.5, -3.9, -4.5]
-	max_kd = 0
-	kds  = []
-	nseq = seq[start:end]
-	for i in range(len(nseq) - ws + 1):
-		kd = 0
-		w  = nseq[i:i + ws]
+	kds = []
+	for i in range(len(seq) - ws + 1):
+		h      = 0
+		avg_kd = 0
+		w = seq[i:i + ws]
+		if 'P' in w: continue
 		for aa in w:
-			if aa in aas: 
-				h  = hyd[aas.index(aa)]
-				kd += h
-		#print(w, kd)
-		kds.append(kd)
-		max_kd = max(kds)
-	return max_kd
-			#avg_kd = kd/len
-			#if avg_kd > max_kd: max_kd = avg_kd
-			#print(max_kd)
-	#return avg_kd
-		
-def hydrophobic(seq, kd, t):
-	if 'P' in seq or kd < t: return False
-	else:                    return True
+			if aa in aas:
+				h += hyd[aas.index(aa)]
+		avg_kd = h/ws
+		#print(w, avg_kd)
+		if avg_kd > t:
+			yield avg_kd
+
+# seq, ws, t returns True or False	
+def hyd(seq, ws, t):
+	for avg_kd in kd(seq, ws, t):
+		if avg_kd < t: return False
+		else:          return True
 
 for name, seq in mcb185.read_fasta(sys.argv[1]):
-	#print('sp')
-	sp_kd  = kd(seq, 8, 0, 30)
-	#print('hr')
-	hr_kd  = kd(seq, 11, 30, len(seq) - 1)
-	sp_hyd = hydrophobic(seq, sp_kd, 2.5)
-	hr_hyd = hydrophobic(seq, hr_kd, 2.0)
-	#print(sp_kd, hr_kd, sp_hyd, hr_hyd)
-	if sp_hyd and hr_hyd: print(name)
+	if hyd(seq[:30], 8, 2.5) and hyd(seq[30:], 11, 2.0): print(name)
 	
 """
 python3 41transmembrane.py ~/DATA/E.coli/GCF_000005845.2_ASM584v2_protein.faa.gz
