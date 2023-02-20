@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import gzip
 import math
 import mcb185
@@ -17,10 +19,64 @@ import sys
 
 # Note: don't worry about "centering" the entropy on the window (yet)
 
+def acgt_prob(seq):
+	a    = 0
+	c    = 0
+	g    = 0
+	t    = 0
+	tot  = 0
+	for nt in seq:
+		if   nt == 'A': a += 1
+		elif nt == 'C': c += 1
+		elif nt == 'G': g += 1
+		else:           t += 1
+		tot += 1
+	probs = [a/tot, c/tot, g/tot, t/tot]
+	return probs
+		
+def entropy(probs):
+	h = 0
+	for val in probs:
+		if val == 0: continue
+		h += val*math.log2(val)
+	return -h
+	
+def wrap(seq, wl):
+	for i in range(0, len(seq), wl):
+		yield seq[i:i + wl]
+
 file = sys.argv[1]
 ws   = int(sys.argv[2])
 ht   = float(sys.argv[3])
 info = ''
+ind  = -1
+seqs = []
+
+for name, seq in mcb185.read_fasta(file):
+		# calculate ACGT probs
+		for nt in seq:
+			seqs.append(nt)
+
+for name, seq in mcb185.read_fasta(file):
+	print(name)
+	for i in range(len(seq) - ws + 1):
+		w = seq[i:i + ws]
+		ind += 1
+		probs = acgt_prob(w)
+		assert(math.isclose(sum(probs), 1.0))
+		h = entropy(probs)
+		if h < ht: seqs[ind] = 'N'
+seq =''.join(seqs)
+
+for line in wrap(seq, 60): print(line)
+
+
+"""
+file = sys.argv[1]
+ws   = int(sys.argv[2])
+ht   = float(sys.argv[3])
+info = ''
+ind  = -1
 seqs = []
 
 with gzip.open(file, 'rt') as fp:
@@ -30,11 +86,6 @@ with gzip.open(file, 'rt') as fp:
 		# calculate ACGT probs
 		for nt in line:
 			seqs.append(nt)
-
-
-ind   = -1
-#print(probs)
-#print(seqs[:11])
 
 with gzip.open(file, 'rt') as fp:
 	for line in fp.readlines():
@@ -46,9 +97,9 @@ with gzip.open(file, 'rt') as fp:
 			w = line[i:i + ws]
 			ind += 1
 			#calculate entropy
-			probs = mcb185.acgt_prob(w)
+			probs = acgt_prob(w)
 			assert(math.isclose(sum(probs), 1.0))
-			h = mcb185.entropy(probs)
+			h = entropy(probs)
 			#print(h)
 			if h < ht: seqs[ind] = 'N'
 #print(seqs)
@@ -56,11 +107,8 @@ seq =''.join(seqs)
 
 for i in range(0, len(seq), 60):
 	print(seq[i:i+60])
+"""
 			
-			
-
-#seqs = mcb185.read_fasta(file)
-#print(seqs)
 
 """
 python3 42dust.py ~/DATA/E.coli/GCF_000005845.2_ASM584v2_genomic.fna.gz 11 1.4
