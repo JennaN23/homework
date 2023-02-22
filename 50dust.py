@@ -1,0 +1,122 @@
+#!/usr/bin/env python3
+
+import argparse
+import math
+import mcb185
+import sys
+
+# 50dust.py
+
+# Write a better version of your 42dust.py program
+# Your program must have the following properties
+
+# 1. the entropy of each window is centered (N's in the middle of windows)
+# 2. has option and default value for window size
+# 3. has option and default value for entropy threshold
+# 4. has a switch for N-based or lowercase (soft) masking
+# 5. works with uppercase or lowercase input files
+# 6. works as an executable
+
+# Optional: make the algorithm faster (see 29gcwin.py for inspiration)
+# Optional: benchmark your programs with different window sizes using time
+
+# Hint: make a smaller file for testing (e.g. e.coli.fna in the CLI below)
+
+def acgt_prob(seq):
+	a    = 0
+	c    = 0
+	g    = 0
+	t    = 0
+	tot  = 0
+	for nt in seq:
+		if   nt == 'A': a += 1
+		elif nt == 'C': c += 1
+		elif nt == 'G': g += 1
+		else:           t += 1
+		tot += 1
+	probs = [a/tot, c/tot, g/tot, t/tot]
+	return probs
+		
+def entropy(probs):
+	h = 0
+	for val in probs:
+		if val == 0: continue
+		h += val*math.log2(val)
+	return -h
+	
+def wrap(seq, wl):
+	for i in range(0, len(seq), wl):
+		yield seq[i:i + wl]
+
+# setup
+parser = argparse.ArgumentParser(description='Brief description of program.')
+
+# positional arguments (always required)
+parser.add_argument('file', type=str, metavar='<file>', help='some file')
+
+# optional arguments with default parameters
+parser.add_argument('-w', required=False, type=int, default=11,
+	metavar='<int>', help='window size [%(default)s]')
+parser.add_argument('-t', required=False, type=float, default=1.4,
+	metavar='<int>', help='entropy threshold [%(default)i]')
+
+# switches
+parser.add_argument('-s', action='store_true',
+	help='on/off switch')
+
+# finalization
+arg = parser.parse_args()
+
+"""
+# testing
+print(arg.file)
+print(arg.w, arg.t)
+if arg.s: print('switch on')
+else:     print('switch off')
+"""
+
+info = ''
+seqs = []
+
+for name, seq in mcb185.read_fasta(arg.file):
+		# calculate ACGT probs
+		if seq.islower(): seq.upper()
+		for nt in seq:
+			seqs.append(nt)
+
+for name, seq in mcb185.read_fasta(arg.file):
+	print(name)
+	for i in range(len(seq) - arg.w + 1):
+		w  = seq[i:i + arg.w]
+		if arg.w % 2 == 0: cw = arg.w//2
+		else:              cw = arg.w//2 + 1
+		probs = acgt_prob(w)
+		assert(math.isclose(sum(probs), 1.0))
+		h = entropy(probs)
+		if h < arg.t: 
+			if arg.s: seqs[i + cw - 1] = seq[i + cw - 1].lower()
+			else: seqs[i + cw - 1] = 'N'
+seq =''.join(seqs)
+
+for line in wrap(seq, 60): print(line)
+
+"""
+python3 50dust.py -w 11 -t 1.4 -s e.coli.fna  | head
+>NC_000913.3 Escherichia coli str. K-12 substr. MG1655, complete genome
+AGCTTTTcATTCTGACTGCAACGGGCAATATGTCTCTGTGTGGATTaaaaaaaGAGTGTC
+TGATAGCAGCTTCTGAACTGGTTACCTGCCGTGAGTAAattaaaattttATTGACTTAGG
+TCACTAAATacTTTAACCAATATAGGCATAGCGCACAGACAGAtAaaaaTTACAGAGTAC
+ACAacATCCATGAAACGCATTAGCACCACCATTACCAccaccatCACCATTACCACAGGT
+AACGGTGCgGGCTGACGCGTACAGGAAACacagaaaaAAGCCCGCACCTGACAGTGCGGG
+CTttttttTTCGACCAAAGGTAACGAGGTAACAACCATGCGAGTGTTGAAGTTCGGCGGT
+ACATCAGTGGCAAATGCAGAACGTTTTCTGCGTGTTGCCGATATTCTGGAAAGCAATGCC
+AGGCAGggGCaGGTGGCCACCGTCcTCtctgcccCcgcCAAAatcaccaacCACCTGGTG
+GCGATGATTGaAAAAacCATTAGCGGCCAGGATGCTTTACCCAATATCAGCGATGCCGAA
+
+Timings
+win alg1 alg2
+11  28.7 25.8
+25  30.4 26.1
+100 33.2 26.1
+200 37.4 25.9
+"""

@@ -49,7 +49,6 @@ file = sys.argv[1]
 ws   = int(sys.argv[2])
 ht   = float(sys.argv[3])
 info = ''
-ind  = -1
 seqs = []
 
 for name, seq in mcb185.read_fasta(file):
@@ -61,11 +60,10 @@ for name, seq in mcb185.read_fasta(file):
 	print(name)
 	for i in range(len(seq) - ws + 1):
 		w = seq[i:i + ws]
-		ind += 1
 		probs = acgt_prob(w)
 		assert(math.isclose(sum(probs), 1.0))
 		h = entropy(probs)
-		if h < ht: seqs[ind] = 'N'
+		if h < ht: seqs[i] = 'N'
 seq =''.join(seqs)
 
 for line in wrap(seq, 60): print(line)
