@@ -3,6 +3,7 @@
 import argparse
 import math
 import mcb185
+import subprocess
 import sys
 
 # 50dust.py
@@ -10,12 +11,12 @@ import sys
 # Write a better version of your 42dust.py program
 # Your program must have the following properties
 
-# 1. the entropy of each window is centered (N's in the middle of windows)
-# 2. has option and default value for window size
-# 3. has option and default value for entropy threshold
-# 4. has a switch for N-based or lowercase (soft) masking
-# 5. works with uppercase or lowercase input files
-# 6. works as an executable
+# 1. has option and default value for window size
+# 2. has option and default value for entropy threshold
+# 3. has a switch for N-based or lowercase (soft) masking
+# 4. works with uppercase or lowercase input files
+# 5. works as an executable
+# 6. outputs a FASTA file wrapped at 60 characters
 
 # Optional: make the algorithm faster (see 29gcwin.py for inspiration)
 # Optional: benchmark your programs with different window sizes using time
@@ -79,44 +80,37 @@ info = ''
 seqs = []
 
 for name, seq in mcb185.read_fasta(arg.file):
+		seq = seq.upper()
 		# calculate ACGT probs
-		if seq.islower(): seq.upper()
 		for nt in seq:
 			seqs.append(nt)
 
 for name, seq in mcb185.read_fasta(arg.file):
-	print(name)
+	print(f'>{name}')
+	seq = seq.upper()
 	for i in range(len(seq) - arg.w + 1):
 		w  = seq[i:i + arg.w]
-		if arg.w % 2 == 0: cw = arg.w//2
-		else:              cw = arg.w//2 + 1
 		probs = acgt_prob(w)
 		assert(math.isclose(sum(probs), 1.0))
 		h = entropy(probs)
 		if h < arg.t: 
-			if arg.s: seqs[i + cw - 1] = seq[i + cw - 1].lower()
-			else: seqs[i + cw - 1] = 'N'
+			if arg.s: seqs[i:i + arg.w] = w.lower()
+			else: seqs[i: i + arg.w] = 'N' * arg.w
 seq =''.join(seqs)
 
 for line in wrap(seq, 60): print(line)
 
+	
 """
 python3 50dust.py -w 11 -t 1.4 -s e.coli.fna  | head
 >NC_000913.3 Escherichia coli str. K-12 substr. MG1655, complete genome
-AGCTTTTcATTCTGACTGCAACGGGCAATATGTCTCTGTGTGGATTaaaaaaaGAGTGTC
-TGATAGCAGCTTCTGAACTGGTTACCTGCCGTGAGTAAattaaaattttATTGACTTAGG
-TCACTAAATacTTTAACCAATATAGGCATAGCGCACAGACAGAtAaaaaTTACAGAGTAC
-ACAacATCCATGAAACGCATTAGCACCACCATTACCAccaccatCACCATTACCACAGGT
-AACGGTGCgGGCTGACGCGTACAGGAAACacagaaaaAAGCCCGCACCTGACAGTGCGGG
-CTttttttTTCGACCAAAGGTAACGAGGTAACAACCATGCGAGTGTTGAAGTTCGGCGGT
+AGcttttcattctGACTGCAACGGGCAATATGTCTCTGTGTggattaaaaaaagagtgTC
+TGATAGCAGCTTCTGAACTGGTTACCTGCCGTGagtaaattaaaattttattgaCTTAGG
+TCACtaaatactttaaCCAATATAGGCATAGCGCACAGacagataaaaattacaGAGTac
+acaacatccaTGAAACGCATTAGCACCACCATtaccaccaccatcaccaTTACCACAGGT
+AACggtgcgggctgACGCGTACAGgaaacacagaaaaaagccCGCACCTGACAGTGCggg
+ctttttttttcgaCCAAAGGTAACGAGGTAACAACCATGCGAGTGTTGAAGTTCGGCGGT
 ACATCAGTGGCAAATGCAGAACGTTTTCTGCGTGTTGCCGATATTCTGGAAAGCAATGCC
-AGGCAGggGCaGGTGGCCACCGTCcTCtctgcccCcgcCAAAatcaccaacCACCTGGTG
-GCGATGATTGaAAAAacCATTAGCGGCCAGGATGCTTTACCCAATATCAGCGATGCCGAA
-
-Timings
-win alg1 alg2
-11  28.7 25.8
-25  30.4 26.1
-100 33.2 26.1
-200 37.4 25.9
+AggcaggggcaggtggCCAccgtcctctctgcccccgccaaaatcaccaaccacctGGTG
+GCGATgattgaaaaaaccattaGCGGCCAGGATGCTTTACCCAATATCAGCGATGCCGAA
 """
