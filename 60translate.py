@@ -1,3 +1,5 @@
+import mcb185
+
 # 60translate.py
 
 # Make a function that translates coding sequences into proteins
@@ -66,3 +68,4 @@ YELPDGQVITVGNERFRCPEAMFQPSFLGMESAGIHETSYNSIMKCDIDIRKDLYANTVL\
 SGGTTMYPGIADRMQKEITALAPSTMKIKIIAPPERKYSVWIGGSILASLSTFQQMWISK\
 QEYDESGPSIVHRKCF*\
 "
+mcb185.translate(actin_cds)
