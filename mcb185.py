@@ -75,14 +75,23 @@ def translate(dna, frame=0):
 	'TGA' : '*',	'TGC' : 'C',	'TGG' : 'W',	'TGT' : 'C',
 	'TTA' : 'L',	'TTC' : 'F',	'TTG' : 'L',	'TTT' : 'F',
 }
+
 	for i in range(frame, len(dna) - 2 - frame, 3):
 			codon = dna[i:i + 3]
 			if codon not in gcode: aaseq += 'X'
 			else: 
 				aaseq += gcode[codon]
 				if gcode[codon] == '*': 
-					print(aaseq)
+					#print(aaseq)
+					break
+	return aaseq
 		
-		
+def rc(seq):
+	revc = ''
+	comp = {'A': 'T', 'C': 'G', 'G': 'C', 'T': 'A'}
+	rseq = seq[:-1]
+	for nt in rseq:
+		revc += comp[nt]
+	return revc
 		
 		
