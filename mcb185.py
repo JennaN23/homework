@@ -89,7 +89,7 @@ def translate(dna, frame=0):
 def rc(seq):
 	revc = ''
 	comp = {'A': 'T', 'C': 'G', 'G': 'C', 'T': 'A'}
-	rseq = seq[:-1]
+	rseq = seq[::-1]
 	for nt in rseq:
 		revc += comp[nt]
 	return revc
