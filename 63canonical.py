@@ -18,6 +18,8 @@ import sys
 # Hint: you can read a file twice, first to get the DNA, then the CDS
 # Hint: check your CDS by examining the source protein
 
+# did not include 'join'
+
 seq = ''
 coords = {}
 aas = []
@@ -26,8 +28,8 @@ scs = {}
 with gzip.open(sys.argv[1], 'rt') as fp:
 	for line in fp:
 		f = line.split()
-		pat1 = '\W+CDS\W+(\d+)..(\d+)'
-		pat2 = '\W+CDS\W+complement\((\d+)..(\d+)'
+		pat1 = '\s{5}CDS\s+(\d+)..(\d+)'
+		pat2 = '\s{5}CDS\s+complement\((\d+)..(\d+)'
 		pat3 = '\W+\/translation=.(\w+)'
 		match = re.search(pat1, line)
 		if match: 
@@ -72,14 +74,10 @@ for key, val in coords.items():
 
 aas = []
 
-for sc, count in sorted(scs.items(), key=lambda item: item[1]):
+for sc, count in sorted(scs.items(), key=lambda item: item[1], reverse=True):
 	aas.append((sc, count))
 	print(f'{sc} {count}')
 
-"""
-for i in range(len(aas) - 1, -1, -1):
-	print(f'{aas[i][0]} {aas[i][1]}')		
-"""
 
 """
 python3 63canonical.py ~/DATA/E.coli/GCF_000005845.2_ASM584v2_genomic.gbff.gz
