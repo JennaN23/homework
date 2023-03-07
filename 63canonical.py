@@ -51,7 +51,7 @@ seq    = seq.upper()
 rseq   = mcb185.rc(seq)
 
 for key, val in coords.items():
-    # index starts at 0 for comp sci, 1 for bio
+	# index starts at 0 for comp sci, 1 for bio
 	#print(start, end, val)
 	if val == '+':
 		start = int(key[0]) - 1
