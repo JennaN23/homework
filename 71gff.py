@@ -1,3 +1,8 @@
+import gzip
+import json
+import re
+import sys
+
 # 71gff.py
 
 # Write a program that converts genes in gff into JSON
@@ -10,6 +15,25 @@
 
 # Note: gene names are stored differently here than the last file
 
+genes = {}
+types = ['I', 'II', 'III', 'IV', 'MtDNA', 'V', 'X']
+
+with gzip.open(sys.argv[1], 'rt') as fp:
+	for line in fp:
+		f = line.split()
+		if f[2] == 'gene':
+			pat1 = '\;Alias=(\w+)'
+			match = re.search(pat1, line)
+			if match: gene = match.group(1)
+			type = f[0]
+			if type not in genes: genes[type] = [{"gene": gene, "beg": f[3], "end": f[4], "strand": f[6]}]
+			genes[type][0] = genes[type].append({"gene": gene, "beg": f[3], "end": f[4], "strand": f[6]})
+
+for type in types:
+	length = len(genes[type])
+	print(f'{type} {length}')
+
+print(json.dumps(genes, indent=4))
 
 """
 python3 71gff.py elegans

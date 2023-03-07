@@ -29,7 +29,7 @@ def find_orfs(dna, min, is_comp):
 		dna = mcb185.rc(dna)
 		#print(dna[len(dna) - 500:len(dna) - 497], dna[len(dna) - 110:len(dna) - 107])
 		# stop = length - 110: length - 107
-		#print(dna[len(dna) - 500:len(dna) - 497], dna[len(dna) - 110:len(dna) - 107])
+		print(dna[len(dna) - 500:len(dna) - 497], dna[len(dna) - 110:len(dna) - 107])
 		#print(dna[len(dna) - 4162:len(dna) - 4159], dna[len(dna) - 3514:len(dna) - 3511])
 		#print(len(dna) - 500, len(dna) - 497, len(dna) - 110, len(dna) - 107)
 		#print(dna[107:110], dna[497:500])
@@ -60,10 +60,11 @@ def find_orfs(dna, min, is_comp):
 							if stop not in orfs: 
 								# stop = length - 110: length - 107
 								if is_comp:
+									# key with end, strand
 									#print(cod, cod2, stop, start, l, len(dna) - stop)
-									orfs[len(dna) - start - 2] = (len(dna) - stop, aas[:10], '-', frame)
+									orfs[len(dna) - start - 2, '-'] = (len(dna) - stop, aas[:10], frame)
 								else:
-									orfs[stop] = (start, aas[:10], '+', frame)
+									orfs[stop, '+'] = (start, aas[:10], frame)
 							#print(orfs)
 							orf_found = True
 							current_start = current_stop
@@ -93,15 +94,15 @@ for name, seq in mcb185.read_fasta(arg.file):
 	f = name.split()
 	id = f[0]
 
-find_orfs(seq, arg.min, False)
+#find_orfs(seq, arg.min, False)
 find_orfs(seq, arg.min, True)
 
 for key, val in sorted(orfs.items(), key=lambda item: item[0]):
-	stop = key
+	stop = key[0]
 	start = val[0]
 	aas = val[1]
-	strand = val[2]
-	frame = val[3]
+	strand = key[1]
+	frame = val[2]
 	print(f'{id} {start} {stop} {strand} {aas} {frame}')
 
 #rdna = mcb185.rc(dna)
