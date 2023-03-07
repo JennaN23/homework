@@ -86,7 +86,6 @@ for name, seq in mcb185.read_fasta(arg.file):
 			seqs.append(nt)
 
 for name, seq in mcb185.read_fasta(arg.file):
-	print(f'>{name}')
 	seq = seq.upper()
 	for i in range(len(seq) - arg.w + 1):
 		w  = seq[i:i + arg.w]
@@ -96,9 +95,9 @@ for name, seq in mcb185.read_fasta(arg.file):
 		if h < arg.t: 
 			if arg.s: seqs[i:i + arg.w] = w.lower()
 			else: seqs[i: i + arg.w] = 'N' * arg.w
-seq =''.join(seqs)
-
-for line in wrap(seq, 60): print(line)
+	print(f'>{name}')
+	seq =''.join(seqs)
+	for line in wrap(seq, 60): print(line)
 
 	
 """
