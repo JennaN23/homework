@@ -26,8 +26,8 @@ with gzip.open(sys.argv[1], 'rt') as fp:
 			match = re.search(pat1, line)
 			if match: gene = match.group(1)
 			type = f[0]
-			if type not in genes: genes[type] = [{"gene": gene, "beg": f[3], "end": f[4], "strand": f[6]}]
-			genes[type][0] = genes[type].append({"gene": gene, "beg": f[3], "end": f[4], "strand": f[6]})
+			if type not in genes: genes[type] = []
+			genes[type].append({"gene": gene, "beg": f[3], "end": f[4], "strand": f[6]})
 
 for type in types:
 	length = len(genes[type])
