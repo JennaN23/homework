@@ -76,17 +76,11 @@ if arg.s: print('switch on')
 else:     print('switch off')
 """
 
-info = ''
-seqs = []
-
 for name, seq in mcb185.read_fasta(arg.file):
-		seq = seq.upper()
-		# calculate ACGT probs
-		for nt in seq:
-			seqs.append(nt)
-
-for name, seq in mcb185.read_fasta(arg.file):
+	seqs = []
 	seq = seq.upper()
+	for nt in seq:
+			seqs.append(nt)
 	for i in range(len(seq) - arg.w + 1):
 		w  = seq[i:i + arg.w]
 		probs = acgt_prob(w)
@@ -96,8 +90,8 @@ for name, seq in mcb185.read_fasta(arg.file):
 			if arg.s: seqs[i:i + arg.w] = w.lower()
 			else: seqs[i: i + arg.w] = 'N' * arg.w
 	print(f'>{name}')
-	seq =''.join(seqs)
-	for line in wrap(seq, 60): print(line)
+	nseq =''.join(seqs)
+	for line in wrap(nseq, 60): print(line)
 
 	
 """
