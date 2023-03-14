@@ -1,7 +1,6 @@
 import argparse
 import gzip
 import mcb185
-import re
 
 # 62orfs.py
 
@@ -20,61 +19,42 @@ import re
 
 # Note: your genes should be similar to those in the real genome
 
-# 5' - ATG AAA TAA - 3'
-# 3' - TAC TTT ATT - 5' complement
-# 5' - TTA TTT CAT - 3' reverse complement 
+# 5' - ATG AAA TAA TAG- 3'
+# 3' - TAC TTT ATT ATC- 5' complement
+# 5' - CTA TTA TTT CAT - 3' reverse complement 
 
-def find_orfs(dna, min, is_comp):
-	if is_comp: 
-		dna = mcb185.rc(dna)
-		#print(dna[len(dna) - 500:len(dna) - 497], dna[len(dna) - 110:len(dna) - 107])
-		# stop = length - 110: length - 107
-		print(dna[len(dna) - 500:len(dna) - 497], dna[len(dna) - 110:len(dna) - 107])
-		#print(dna[len(dna) - 4162:len(dna) - 4159], dna[len(dna) - 3514:len(dna) - 3511])
-		#print(len(dna) - 500, len(dna) - 497, len(dna) - 110, len(dna) - 107)
-		#print(dna[107:110], dna[497:500])
+def find_end(seq, start):
+	for i in range(start, len(seq) - 2, 3):
+		cod = seq[i:i + 3]
+		if cod == 'TAA' or cod == 'TGA' or cod == 'TAG':
+			if (i + 3) - start > min and (i + 3) not in orfs:
+				return i + 3
+			else: break
+		
+def find_starts(seq, frame, is_rc):
+	for i in range(frame, len(seq) - 2, 3):
+		cod = seq[i:i + 3]
+		if cod == 'ATG':
+			start = i
+			stop = find_end(seq, start)
+			if stop == None: continue
+			if is_rc:
+				orfs[len(seq) - start] = [len(seq) - stop + 1]
+			else:
+				orfs[stop] = [start + 1]
+			
+def find_orfs(seq, min, is_rc, id):
+	anti = mcb185.rc(seq)
 	for frame in range(3):
-		current_start = frame
-		#print('new frame', frame, (len(dna) - current_start - 2))
-		# look for start
-		while current_start < (len(dna) - current_start - 2):
-			orf_found = False
-			cod = dna[current_start:current_start + 3]
-			#if current_start >= 100: print(current_start, cod)
-			if cod == 'ATG': 
-				# found start
-				#print(j)
-				start = current_start + 1
-				current_stop = current_start
-				# look for stop
-				while current_stop < (len(dna) - current_start - 2) and not orf_found:
-					cod2 = dna[current_stop:current_stop + 3]
-					l = (current_stop + 3) - start
-					#print(cod, start, cod2, l, l > arg.min)
-					min_orf = l >= min
-					if (cod2 =='TAA' or cod2 == 'TGA' or cod2 == 'TAG'):
-						if min_orf:
-							stop = current_stop + 3
-							#print(cod, cod2, stop, start, l, min_orf)
-							aas = mcb185.translate(dna[current_start:stop])
-							if stop not in orfs: 
-								# stop = length - 110: length - 107
-								if is_comp:
-									# key with end, strand
-									#print(cod, cod2, stop, start, l, len(dna) - stop)
-									orfs[len(dna) - start - 2, '-'] = (len(dna) - stop, aas[:10], frame)
-								else:
-									orfs[stop, '+'] = (start, aas[:10], frame)
-							#print(orfs)
-							orf_found = True
-							current_start = current_stop
-							#print(frame, current_start, current_stop, stop)
-							# look for next orf
-							break
-						else: break   # found stop, but too short
-					current_stop += 3
-			current_start += 3
-
+		find_starts(seq, frame, is_rc)
+		for orf in orfs:
+			if is_rc:
+				orfs[orf].append(mcb185.translate(seq[len(seq) - orf:]))
+				orfs[orf].append(f'-')
+			else:
+				orfs[orf].append(mcb185.translate(seq[orfs[orf][0] - 1:]))
+				orfs[orf].append(f'+')
+			orfs[orf].append(id)
 # setup
 parser = argparse.ArgumentParser(description='Brief description of program.')
 
@@ -88,36 +68,36 @@ parser.add_argument('-min', required=False, type=int, default=300,
 # finalization
 arg = parser.parse_args()
 
-orfs = {}
 
-for name, seq in mcb185.read_fasta(arg.file):
+filename = arg.file
+min      = arg.min
+orfs     = {}
+
+for name, seq in mcb185.read_fasta(filename):
 	f = name.split()
 	id = f[0]
-
-#find_orfs(seq, arg.min, False)
-find_orfs(seq, arg.min, True)
-
-for key, val in sorted(orfs.items(), key=lambda item: item[0]):
-	stop = key[0]
-	start = val[0]
-	aas = val[1]
-	strand = key[1]
-	frame = val[2]
-	print(f'{id} {start} {stop} {strand} {aas} {frame}')
-
-#rdna = mcb185.rc(dna)
-#print(dna[2800:2803], dna[3730:3733])
-#print(dna[2800:2803], dna[3730:3733])
+	anti = mcb185.rc(seq)
+	find_orfs(seq, min, False, id)
+	find_orfs(anti, min, True, id)
+	
+for key, val in sorted(orfs.items(), key=lambda item: item[1]):
+	start  = val[0]
+	stop   = key
+	strand = val[2]
+	aas    = val[1][:10] 
+	id     = val[3] 
+	print(f'{id} {start} {stop} {strand} {aas}')
+	
 		
-	# find start, stop, then translate
-	# find orf, then skip
-	# use dictionary of end coordinates as key?	
-	# reverse complement
-	# iterate through frame (0, 1, 2)  (3 for loops (nested))
-	# go through whole sequence, find orf (set val to true)
-	# store end as key, check to see if key already in dict
-	# store print as tuple as value, sort using start coordinate
-	# sorted(dictionary.values())
+# find start, stop, then translate
+# find orf, then skip
+# use dictionary of end coordinates as key?	
+# reverse complement
+# iterate through frame (0, 1, 2)  (3 for loops (nested))
+# go through whole sequence, find orf (set val to true)
+# store end as key, check to see if key already in dict
+# store print as tuple as value, sort using start coordinate
+# sorted(dictionary.values())
 	
 
 """
