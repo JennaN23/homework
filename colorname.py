@@ -23,7 +23,7 @@ import sys
 # |p-q|
 
 colornames = {
-	 'white':            [255, 255, 255], 'void':          [0, 0, 0],
+	 'white':            [255, 255, 255], 'the void':      [0, 0, 0],
 	 'party poison red': [255, 0, 0],     'green':         [0, 255, 0],
 	 'blue':             [0, 0, 255],     'danger days dirt': [92, 60, 6],
 	 'digust (yellow)':  [255, 255, 0],   'magenta':       [255, 0, 255],
@@ -60,7 +60,7 @@ parser = argparse.ArgumentParser(description='Brief description of program.')
 # positional arguments (always required)
 parser.add_argument('file', type=str, metavar='<file>', help='some file')
 
-
+"""
 # optional arguments with default parameters
 parser.add_argument('-r', required=False, type=int, default=255,
 	metavar='<int>', help='red value [%(default)s]')
@@ -68,8 +68,7 @@ parser.add_argument('-g', required=False, type=int, default=255,
 	metavar='<int>', help='green value [%(default)s]')
 parser.add_argument('-b', required=False, type=int, default=255,
 	metavar='<int>', help='blue value [%(default)s]')
-
-# subparser
+"""
 
 # finalization
 arg = parser.parse_args()
@@ -82,13 +81,13 @@ with open(filename, 'rt') as fp:
 		color_dist = []
 		try:
 			r, g, b = line.split()
-		except:
-			print(f'Line does not contain exactly 3 values', file=sys.stderr)
-		r = int(r)
-		g = int(g)
-		b = int(b)
-		if (r >= 0 and r <= 255) and (g >= 0 and g <= 255) and (b >= 0 and b <= 255):  
+			r = int(r)
+			g = int(g)
+			b = int(b)
+			assert(r >= 0 and r <= 255)
+			assert(g >= 0 and g <= 255)
+			assert(b >= 0 and b <= 255)
 			rgb = [r, g, b]
 			print(find_color(rgb))
-		else:
-			print(f'Please choose 3 numbers between 0 and 255', file=sys.stderr)
+		except:
+			print(f'Line does not contain exactly 3 integers between 0 and 255', file=sys.stderr)
