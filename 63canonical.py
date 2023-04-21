@@ -33,15 +33,12 @@ with gzip.open(sys.argv[1], 'rt') as fp:
 		pat3 = '\W+\/translation=.(\w+)'
 		match = re.search(pat1, line)
 		if match: 
-			#print(match.group(1), match.group(2))
 			coords[match.group(1), match.group(2)] = '+'
 		match2 = re.search(pat2, line)
 		if match2:
-			#print(match2.group(1), match2.group(2))
 			coords[match2.group(1), match2.group(2)] = '-'
 		match3 = re.search(pat3, line)
 		if match3:
-			#print(match3.group(1))
 			aas.append(match3.group(1))
 		if f[0].isdigit() == False: continue
 		seq += f[1] + f[2] + f[3] + f[4] + f[5] + f[6]
@@ -52,25 +49,18 @@ rseq   = mcb185.rc(seq)
 
 for key, val in coords.items():
 	# index starts at 0 for comp sci, 1 for bio
-	#print(start, end, val)
 	if val == '+':
 		start = int(key[0]) - 1
 		end = int(key[1])
 		cds = seq[start:end]
-		#print(cds)
-		#print(mcb185.translate(cds))
 		sc = cds[0:3]
-		#print(sc)
 	else: 
 		start = int(key[0])
 		end = int(key[1])
 		cds = rseq[length - end:length - start]
-		#print(cds)
 		sc = cds[0:3]
-		#print(sc)
 	if sc not in scs: scs[sc] = 0
 	scs[sc] += 1
-	#print(scs)
 
 aas = []
 
